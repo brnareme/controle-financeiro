@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Controle Financeiro</title>
+    <!-- CSS minimalista para o visual Clean -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Chart.js para o Gráfico de Pizza -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para exibir porcentagens sobre as fatias -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Controle Financeiro</h1>
+    </header>
+
+    <div class="container">
+        
+        <!-- ABA 1: DASHBOARD & LANÇAMENTOS -->
+        <div id="tabDashboard" class="tab-content active">
+            <!-- Saldo -->
+            <div class="balance-card">
+                <span class="balance-title">Saldo Livre Atual</span>
+                <div class="balance-value" id="totalBalance">R$ 0,00</div>
+                <div class="totals-grid">
+                    <div class="total-item">
+                        <small>Entradas</small>
+                        <p class="income" id="totalIncome">+R$ 0,00</p>
+                    </div>
+                    <div class="total-item">
+                        <small>Saídas</small>
+                        <p class="expense" id="totalExpense">-R$ 0,00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário Novo Lançamento -->
+            <div class="card">
+                <h2>Novo Lançamento</h2>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="type" class="form-control" onchange="updateCategories()">
+                            <option value="expense">Saída / Despesa</option>
+                            <option value="income">Entrada / Receita</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor (R$)</label>
+                        <input type="number" step="0.01" id="amount" class="form-control" placeholder="0,00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+
+                        <select
+                            id="category"
+                            class="form-control"
+                            onchange="handleCategoryChange()"
+                            required
+                        ></select>
+                    </div>
+
+                    <div class="form-group" id="newCategoryGroup" hidden>
+                        <label>Nome da nova categoria</label>
+
+                        <div class="category-input-row">
+                            <input
+                                type="text"
+                                id="newCategory"
+                                class="form-control"
+                                placeholder="Ex: Assinaturas"
+                                maxlength="40"
+                            >
+
+                            <button
+                                type="button"
+                                class="btn btn-small"
+                                onclick="addCustomCategory()"
+                            >
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Data</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Observação</label>
+                        <input type="text" id="description" class="form-control" placeholder="Ex: Compras da semana">
+                    </div>
+                    <button type="submit" class="btn">Salvar Lançamento</button>
+                </form>
+            </div>
+
+            <!-- Últimos Lançamentos -->
+            <div class="card">
+                <h2>Últimos Lançamentos</h2>
+                <div id="transactionList"></div>
+            </div>
+        </div>
+
+        <!-- ABA 2: RELATÓRIOS & EXPORTAÇÃO -->
+        <div id="tabReports" class="tab-content">
+            <!-- Filtro de Período e Categorias -->
+            <div class="card">
+                <h2>Filtros do Relatório</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data Inicial</label>
+                        <input type="date" id="startDate" class="form-control" onchange="renderReport()">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Final</label>
+                        <input type="date" id="endDate" class="form-control" onchange="renderReport()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="filterCategory" class="form-control" onchange="renderReport()">
+                        <option value="">Todas as Categorias</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Gráfico no Relatório -->
+            <div class="card">
+                <h2>Distribuição por Categoria (%)</h2>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Área de Detalhamento do Relatório -->
+            <div class="card">
+                <h2 style="border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px;">Detalhamento de Saídas</h2>
+                <div id="reportSummary" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;"></div>
+                <div id="detailedReportList"></div>
+            </div>
+
+            <!-- Botão de Exportação de Planilha -->
+            <div class="card">
+                <h2>Exportar Relatório</h2>
+                <button class="btn btn-outline" onclick="exportToCSV()">📊 Baixar Planilha (.CSV)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navegação Inferior -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('tabDashboard', this)">
+            <span>🏠</span>
+            <span>Lançamentos</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('tabReports', this)">
+            <span>📊</span>
+            <span>Relatórios</span>
+        </button>
+    </nav>
+    <!-- JavaScript Principal -->
+    <script src="script.js"></script>
+</body>
+</html>

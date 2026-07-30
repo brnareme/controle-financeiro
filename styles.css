@@ -1,0 +1,101 @@
+:root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --green: #16a34a;
+            --red: #dc2626;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; }
+
+        header { background: var(--card-bg); padding: 16px; border-bottom: 1px solid var(--border); text-align: center; position: sticky; top: 0; z-index: 10; }
+        header h1 { font-size: 1.2rem; color: var(--text-main); }
+
+        .container { max-width: 500px; margin: 0 auto; padding: 16px; }
+
+        /* Abas de Navegação Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--border);
+            padding: 8px 0;
+            z-index: 100;
+        }
+        .nav-item {
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            width: 50%;
+            padding: 4px;
+        }
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Cards e Painéis */
+        .balance-card { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; text-align: center; }
+        .balance-title { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-value { font-size: 2rem; font-weight: bold; margin: 8px 0; }
+        
+        .totals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .total-item small { color: var(--text-muted); font-size: 0.75rem; }
+        .total-item p { font-weight: 600; font-size: 1.1rem; }
+        .income { color: var(--green); }
+        .expense { color: var(--red); }
+
+        .card { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; }
+        .card h2 { font-size: 1rem; margin-bottom: 12px; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; background: var(--primary); color: white; }
+        .btn:hover { background: var(--primary-hover); }
+
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+        .category-input-row { display: flex; align-items: center; gap: 8px; }
+
+        .category-input-row .form-control { flex: 1; }
+
+        .btn-small { width: auto; padding: 10px 14px; white-space: nowrap; }
+
+        /* Lista de Transações */
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .transaction-item:last-child { border-bottom: none; }
+        .transaction-info h4 { font-size: 0.9rem; }
+        .transaction-info small { color: var(--text-muted); font-size: 0.75rem; }
+        .transaction-amount { font-weight: 600; font-size: 0.95rem; }
+
+        /* Gráfico */
+        .chart-container { position: relative; height: 250px; width: 100%; }
+
+        /* Relatório Detalhado */
+        .report-category { border-bottom: 1px solid var(--border); padding: 12px 0; }
+        .report-category:last-child { border-bottom: none; }
+        .category-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem; margin-bottom: 6px; }
+.delete-btn { color: var(--red); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 8px; }
