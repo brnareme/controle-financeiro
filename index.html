@@ -44,7 +44,7 @@
                 <form id="transactionForm">
                     <div class="form-group">
                         <label>Tipo</label>
-                        <select id="type" class="form-control" onchange="updateCategories()">
+                        <select id="type" class="form-control" onchange="handleTypeChange()">
                             <option value="expense">Saída / Despesa</option>
                             <option value="income">Entrada / Receita</option>
                         </select>
@@ -85,6 +85,18 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="form-group" id="paymentMethodGroup">
+                        <label>Método de Pagamento</label>
+                        <select id="paymentMethod" class="form-control">
+                            <option value="">Selecione...</option>
+                            <option value="credit">Cartão de Crédito</option>
+                            <option value="debit">Cartão de Débito</option>
+                            <option value="pix">Pix</option>
+                            <option value="cash">Dinheiro</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label>Data</label>
                         <input type="date" id="date" class="form-control" required>

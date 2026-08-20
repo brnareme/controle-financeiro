@@ -69,7 +69,7 @@ Chart.register(ChartDataLabels);
         document.getElementById('startDate').value = firstDay;
         document.getElementById('endDate').value = lastDay;
 
-        updateCategories();
+        handleTypeChange();
         initFilterCategories();
         renderDashboard();
 
@@ -137,6 +137,23 @@ Chart.register(ChartDataLabels);
                 newCategoryInput.focus();
             } else {
                 newCategoryInput.value = "";
+            }
+        }
+
+        function handleTypeChange() {
+            updateCategories();
+
+            const type = document.getElementById("type").value;
+            const paymentMethodGroup = document.getElementById("paymentMethodGroup");
+            const paymentMethod = document.getElementById("paymentMethod");
+
+            if (type === "expense") {
+                paymentMethodGroup.hidden = false;
+                paymentMethod.required = true;
+            } else {
+                paymentMethodGroup.hidden = true;
+                paymentMethod.required = false;
+                paymentMethod.value = "";
             }
         }
 
@@ -233,6 +250,10 @@ Chart.register(ChartDataLabels);
                 type: document.getElementById('type').value,
                 amount: parseFloat(document.getElementById('amount').value),
                 category: selectedCategory,
+                paymentMethod:
+                    document.getElementById('type').value === 'expense'
+                        ? document.getElementById('paymentMethod').value
+                        : '',
                 date: document.getElementById('date').value,
                 description: document.getElementById('description').value
             };
@@ -242,7 +263,7 @@ Chart.register(ChartDataLabels);
             
             e.target.reset();
             document.getElementById('date').valueAsDate = new Date();
-            updateCategories();
+            handleTypeChange();
             renderDashboard();
         });
 
@@ -253,6 +274,17 @@ Chart.register(ChartDataLabels);
             if (document.getElementById('tabReports').classList.contains('active')) {
                 renderReport();
             }
+        }
+
+        function getPaymentMethodLabel(method) {
+            const labels = {
+                credit: "Cartão de Crédito",
+                debit: "Cartão de Débito",
+                pix: "Pix",
+                cash: "Dinheiro"
+            };
+
+            return labels[method] || "";
         }
 
         function renderDashboard() {
@@ -273,7 +305,11 @@ Chart.register(ChartDataLabels);
                 div.innerHTML = `
                     <div class="transaction-info">
                         <h4> ${t.category} </h4>
-                        <small>${t.date} ${t.description ? '• ' + t.description : ''}</small>
+                        <small>
+                            ${t.date}
+                            ${t.paymentMethod ? ' • ' + getPaymentMethodLabel(t.paymentMethod) : ''}
+                            ${t.description ? ' • ' + t.description : ''}
+                        </small>
                     </div>
                     <div class="transaction-amount ${t.type}">
                         ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
@@ -382,29 +418,43 @@ Chart.register(ChartDataLabels);
         // EXPORTAÇÃO EXCEL / CSV
         function exportToCSV() {
             const filtered = getFilteredTransactions();
+
             if (filtered.length === 0) {
                 alert("Nenhuma transação encontrada no período para exportar.");
                 return;
             }
 
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Data;Tipo;Categoria;Observacao;Valor (RS)\n";
+
+            csvContent +=
+                "Data;Tipo;Categoria;Metodo de Pagamento;Observacao;Valor (RS)\n";
 
             filtered.forEach(t => {
                 const row = [
                     t.date,
                     t.type === 'income' ? 'Entrada' : 'Saida',
                     `"${t.category}"`,
+                    `"${t.paymentMethod
+                        ? getPaymentMethodLabel(t.paymentMethod)
+                        : ''}"`,
                     `"${t.description || ''}"`,
                     t.amount.toFixed(2).replace('.', ',')
                 ].join(";");
+
                 csvContent += row + "\n";
             });
 
             const encodedUri = encodeURI(csvContent);
+
             const link = document.createElement("a");
+
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `relatorio_financeiro_${document.getElementById('startDate').value}_a_${document.getElementById('endDate').value}.csv`);
+
+            link.setAttribute(
+                "download",
+                `relatorio_financeiro_${document.getElementById('startDate').value}_a_${document.getElementById('endDate').value}.csv`
+            );
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
